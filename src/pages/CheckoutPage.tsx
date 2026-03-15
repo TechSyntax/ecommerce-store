@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Check, CreditCard, Truck, MapPin, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Check, CreditCard, Truck, MapPin, ShieldCheck, PartyPopper, Package } from 'lucide-react';
+import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import CartDrawer from '@/components/CartDrawer';
 import Footer from '@/components/Footer';
@@ -10,9 +11,15 @@ import { formatPrice } from '@/data/products';
 const steps = ['Address', 'Shipping', 'Payment', 'Review'];
 
 const CheckoutPage = () => {
-  const { cart, cartTotal } = useStore();
+  const { cart, cartTotal, clearCart } = useStore();
   const [currentStep, setCurrentStep] = useState(0);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [orderId] = useState(() => 'LXM-' + Math.random().toString(36).slice(2, 8).toUpperCase());
+
+  const handlePlaceOrder = () => {
+    setOrderPlaced(true);
+    clearCart();
+  };
 
   if (cart.length === 0 && !orderPlaced) {
     return (
@@ -33,16 +40,132 @@ const CheckoutPage = () => {
         <Navbar />
         <CartDrawer />
         <main className="pt-28 lg:pt-36 pb-16">
-          <div className="container max-w-lg text-center py-20">
-            <div className="w-20 h-20 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Check className="w-10 h-10 text-success" />
-            </div>
-            <h1 className="font-heading font-bold text-3xl mb-3">Order Confirmed!</h1>
-            <p className="text-muted-foreground mb-2">Order #LXM-{Math.random().toString(36).slice(2, 8).toUpperCase()}</p>
-            <p className="text-sm text-muted-foreground mb-8">We'll send you an email with tracking details shortly.</p>
-            <Link to="/products" className="inline-flex items-center gap-2 px-7 py-3.5 bg-primary text-primary-foreground rounded-2xl font-semibold hover:opacity-90 transition-opacity">
-              Continue Shopping
-            </Link>
+          <div className="container max-w-lg text-center py-16">
+            {/* Animated success */}
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.1 }}
+              className="relative w-28 h-28 mx-auto mb-8"
+            >
+              {/* Outer ring */}
+              <motion.div
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+                className="absolute inset-0 rounded-full bg-success/10 border-2 border-success/20"
+              />
+              {/* Inner circle */}
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 15, delay: 0.3 }}
+                className="absolute inset-3 rounded-full bg-success/20 flex items-center justify-center"
+              >
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 12, delay: 0.5 }}
+                  className="w-14 h-14 rounded-full bg-success flex items-center justify-center shadow-[0_4px_20px_hsl(var(--success)/0.4)]"
+                >
+                  <motion.div
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 1 }}
+                    transition={{ delay: 0.7, duration: 0.4 }}
+                  >
+                    <Check className="w-7 h-7 text-success-foreground" strokeWidth={3} />
+                  </motion.div>
+                </motion.div>
+              </motion.div>
+
+              {/* Confetti dots */}
+              {[...Array(8)].map((_, i) => {
+                const angle = (i / 8) * 360;
+                const rad = (angle * Math.PI) / 180;
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ scale: 0, x: 0, y: 0, opacity: 0 }}
+                    animate={{
+                      scale: [0, 1.2, 0],
+                      x: Math.cos(rad) * 60,
+                      y: Math.sin(rad) * 60,
+                      opacity: [0, 1, 0],
+                    }}
+                    transition={{ delay: 0.6 + i * 0.05, duration: 0.8 }}
+                    className={`absolute top-1/2 left-1/2 w-2 h-2 rounded-full ${
+                      i % 3 === 0 ? 'bg-primary' : i % 3 === 1 ? 'bg-success' : 'bg-accent'
+                    }`}
+                  />
+                );
+              })}
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+            >
+              <div className="flex items-center justify-center gap-2 text-success mb-3">
+                <PartyPopper className="w-5 h-5" />
+                <span className="text-sm font-semibold uppercase tracking-wider">Payment Successful</span>
+              </div>
+              <h1 className="font-heading font-bold text-3xl lg:text-4xl mb-3">Order Confirmed!</h1>
+              <p className="text-muted-foreground mb-1">Order <span className="font-mono font-semibold text-foreground">#{orderId}</span></p>
+              <p className="text-sm text-muted-foreground mb-8">We'll send you an email with tracking details shortly.</p>
+            </motion.div>
+
+            {/* Order summary card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1 }}
+              className="bg-card rounded-2xl border border-border p-5 mb-8 text-left"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Package className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Estimated Delivery</p>
+                  <p className="text-xs text-muted-foreground">
+                    {new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString('en-IN', {
+                      weekday: 'long', month: 'short', day: 'numeric'
+                    })}
+                  </p>
+                </div>
+              </div>
+
+              {/* Progress steps */}
+              <div className="flex items-center gap-1 mb-2">
+                {['Confirmed', 'Processing', 'Shipped', 'Delivered'].map((step, i) => (
+                  <div key={step} className="flex-1 flex flex-col items-center">
+                    <div className={`w-full h-1.5 rounded-full ${i === 0 ? 'bg-success' : 'bg-muted'}`} />
+                    <span className={`text-[10px] mt-1.5 ${i === 0 ? 'text-success font-medium' : 'text-muted-foreground'}`}>{step}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.1 }}
+              className="flex flex-col sm:flex-row gap-3 justify-center"
+            >
+              <Link
+                to="/products"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-primary text-primary-foreground rounded-2xl font-semibold hover:opacity-90 transition-opacity"
+              >
+                Continue Shopping
+              </Link>
+              <Link
+                to="/account/orders"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-border rounded-2xl font-semibold hover:bg-muted/50 transition-colors"
+              >
+                View Orders
+              </Link>
+            </motion.div>
           </div>
         </main>
         <Footer />
@@ -67,13 +190,13 @@ const CheckoutPage = () => {
           <div className="flex items-center justify-between mb-10 max-w-md">
             {steps.map((step, i) => (
               <div key={step} className="flex items-center gap-2">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
                   i <= currentStep ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
                 }`}>
                   {i < currentStep ? <Check className="w-4 h-4" /> : i + 1}
                 </div>
                 <span className={`text-sm hidden sm:block ${i <= currentStep ? 'font-medium' : 'text-muted-foreground'}`}>{step}</span>
-                {i < steps.length - 1 && <div className={`w-8 h-px ${i < currentStep ? 'bg-primary' : 'bg-border'}`} />}
+                {i < steps.length - 1 && <div className={`w-8 h-px transition-colors ${i < currentStep ? 'bg-primary' : 'bg-border'}`} />}
               </div>
             ))}
           </div>
@@ -87,17 +210,17 @@ const CheckoutPage = () => {
                     <MapPin className="w-5 h-5 text-primary" /> Delivery Address
                   </h2>
                   <div className="grid sm:grid-cols-2 gap-4">
-                    <input placeholder="First Name" className="px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30" />
-                    <input placeholder="Last Name" className="px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30" />
+                    <input placeholder="First Name" className="px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30 transition-colors" />
+                    <input placeholder="Last Name" className="px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30 transition-colors" />
                   </div>
-                  <input placeholder="Address Line 1" className="w-full px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30" />
-                  <input placeholder="Address Line 2 (Optional)" className="w-full px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30" />
+                  <input placeholder="Address Line 1" className="w-full px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30 transition-colors" />
+                  <input placeholder="Address Line 2 (Optional)" className="w-full px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30 transition-colors" />
                   <div className="grid sm:grid-cols-3 gap-4">
-                    <input placeholder="City" className="px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30" />
-                    <input placeholder="State" className="px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30" />
-                    <input placeholder="PIN Code" className="px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30" />
+                    <input placeholder="City" className="px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30 transition-colors" />
+                    <input placeholder="State" className="px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30 transition-colors" />
+                    <input placeholder="PIN Code" className="px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30 transition-colors" />
                   </div>
-                  <input placeholder="Phone Number" className="w-full px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30" />
+                  <input placeholder="Phone Number" className="w-full px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30 transition-colors" />
                 </div>
               )}
 
@@ -177,7 +300,7 @@ const CheckoutPage = () => {
                 <button
                   onClick={() => {
                     if (currentStep < steps.length - 1) setCurrentStep(currentStep + 1);
-                    else setOrderPlaced(true);
+                    else handlePlaceOrder();
                   }}
                   className="flex-1 py-3 bg-primary text-primary-foreground rounded-2xl font-heading font-semibold hover:opacity-90 transition-opacity"
                 >
