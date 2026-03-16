@@ -5,7 +5,7 @@ import heroImage from '@/assets/hero-products.jpg';
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-[90vh] flex items-center overflow-hidden noise-overlay">
+    <section className="relative min-h-[90vh] flex items-center overflow-hidden noise-overlay pt-16">
       {/* Background */}
       <div className="absolute inset-0 bg-secondary">
         <div className="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/98 to-secondary/40 z-10" />

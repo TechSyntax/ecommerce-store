@@ -8,7 +8,7 @@ import { products, categories } from '@/data/products';
 const navCategories = ['electronics', 'fashion', 'home', 'beauty', 'accessories', 'grocery', 'books'];
 
 const Navbar = () => {
-  const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -17,8 +17,10 @@ const Navbar = () => {
   const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      setScrollProgress(Math.min(1, window.scrollY / 100));
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -37,14 +39,20 @@ const Navbar = () => {
 
   const displayCategories = categories.filter(c => navCategories.includes(c.id));
 
+  const bgOpacity = 0.5 + scrollProgress * 0.45;
+  const shadowOpacity = scrollProgress * 0.4;
+  const borderOpacity = 0.06 + scrollProgress * 0.04;
+
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? 'bg-[hsl(0,0%,7%)]/85 backdrop-blur-2xl shadow-[0_1px_0_hsl(0,0%,100%,0.06),0_4px_24px_hsl(0,0%,0%,0.4)]'
-          : 'bg-[hsl(0,0%,7%)]/70 backdrop-blur-xl'
-      } border-b border-[hsl(0,0%,100%,0.06)]`}>
-        {/* Main bar */}
+      <nav
+        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-2xl transition-[backdrop-filter] duration-300"
+        style={{
+          backgroundColor: `hsla(0, 0%, 7%, ${bgOpacity})`,
+          boxShadow: `0 1px 0 hsla(0, 0%, 100%, ${borderOpacity}), 0 4px 24px hsla(0, 0%, 0%, ${shadowOpacity})`,
+          borderBottom: `1px solid hsla(0, 0%, 100%, ${borderOpacity})`,
+        }}
+      >
         <div className="container flex items-center gap-4 lg:gap-6 h-16">
           {/* Mobile menu button */}
           <button className="lg:hidden p-2 rounded-lg hover:bg-[hsl(0,0%,100%,0.08)] transition-colors" onClick={() => setMobileMenuOpen(true)}>
@@ -53,10 +61,14 @@ const Navbar = () => {
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
-            <div className="w-8 h-8 rounded-lg bg-[hsl(24,100%,50%)] flex items-center justify-center shadow-[0_0_12px_hsl(24,100%,50%,0.35)] group-hover:shadow-[0_0_20px_hsl(24,100%,50%,0.5)] transition-shadow duration-300">
-              <span className="text-white font-heading font-bold text-xs tracking-tight">EM</span>
+            <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-[hsl(24,100%,55%)] to-[hsl(24,100%,42%)] flex items-center justify-center shadow-[0_0_16px_hsl(24,100%,50%,0.3)] group-hover:shadow-[0_0_24px_hsl(24,100%,50%,0.5)] transition-shadow duration-300">
+              <ShoppingBag className="w-4.5 h-4.5 text-white" strokeWidth={2.2} />
+              <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[hsl(24,100%,50%)] border-2 border-[hsl(0,0%,7%)]" />
             </div>
-            <span className="font-heading font-bold text-base text-white tracking-tight hidden sm:block">E-Mart</span>
+            <div className="hidden sm:flex items-baseline gap-0">
+              <span className="font-heading font-extrabold text-lg text-[hsl(24,100%,50%)]">E</span>
+              <span className="font-heading font-extrabold text-lg text-white">-Mart</span>
+            </div>
           </Link>
 
           {/* Search bar - center */}
@@ -149,23 +161,6 @@ const Navbar = () => {
             </button>
           </div>
         </div>
-
-        {/* Category bar */}
-        <div className="hidden lg:block border-t border-[hsl(0,0%,100%,0.04)]">
-          <div className="container flex items-center justify-center gap-1 py-1.5">
-            {displayCategories.map((cat) => (
-              <Link
-                key={cat.id}
-                to={`/products?category=${cat.id}`}
-                className="relative px-3.5 py-1.5 text-[13px] text-[hsl(0,0%,55%)] hover:text-white rounded-md transition-colors duration-200 group"
-              >
-                <span className="relative z-10">{cat.name}</span>
-                <span className="absolute inset-0 rounded-md bg-[hsl(0,0%,100%,0)] group-hover:bg-[hsl(0,0%,100%,0.06)] transition-colors duration-200" />
-                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 group-hover:w-4 h-[2px] bg-[hsl(24,100%,50%)] rounded-full transition-all duration-300" />
-              </Link>
-            ))}
-          </div>
-        </div>
       </nav>
 
       {/* Mobile search overlay */}
@@ -217,10 +212,13 @@ const Navbar = () => {
             >
               <div className="p-4 flex items-center justify-between border-b border-[hsl(0,0%,100%,0.06)]">
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-[hsl(24,100%,50%)] flex items-center justify-center">
-                    <span className="text-white font-heading font-bold text-[10px]">EM</span>
+                  <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[hsl(24,100%,55%)] to-[hsl(24,100%,42%)] flex items-center justify-center">
+                    <ShoppingBag className="w-3.5 h-3.5 text-white" strokeWidth={2.2} />
                   </div>
-                  <span className="font-heading font-bold text-white text-sm">E-Mart</span>
+                  <div className="flex items-baseline">
+                    <span className="font-heading font-extrabold text-sm text-[hsl(24,100%,50%)]">E</span>
+                    <span className="font-heading font-extrabold text-sm text-white">-Mart</span>
+                  </div>
                 </div>
                 <button onClick={() => setMobileMenuOpen(false)} className="p-1.5 rounded-lg hover:bg-[hsl(0,0%,100%,0.08)]">
                   <X className="w-5 h-5 text-[hsl(0,0%,60%)]" />
