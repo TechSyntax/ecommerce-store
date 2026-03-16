@@ -41,21 +41,34 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
           loading="lazy"
         />
 
-        {/* Badge */}
-        {product.badge && (
-          <span className={`absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-semibold ${badgeColors[product.badge]}`}>
-            {product.badge === 'bestseller' ? '🔥 Bestseller' :
-             product.badge === 'new' ? '✨ New' :
-             product.badge === 'deal' ? '⚡ Deal' : '🔒 Limited'}
-          </span>
-        )}
+        {/* Top overlay row */}
+        <div className="absolute top-3 left-3 right-3 flex items-start justify-between pointer-events-none">
+          {/* Left: badges stacked */}
+          <div className="flex flex-col gap-1.5">
+            {product.badge && (
+              <span className={`pointer-events-auto px-2.5 py-1 rounded-full text-xs font-semibold ${badgeColors[product.badge]} shadow-sm`}>
+                {product.badge === 'bestseller' ? '🔥 Bestseller' :
+                 product.badge === 'new' ? '✨ New' :
+                 product.badge === 'deal' ? '⚡ Deal' : '🔒 Limited'}
+              </span>
+            )}
+            {product.discount > 0 && (
+              <span className="pointer-events-auto bg-primary text-primary-foreground px-2 py-1 rounded-full text-xs font-bold font-mono shadow-sm w-fit">
+                -{product.discount}%
+              </span>
+            )}
+          </div>
 
-        {/* Discount badge */}
-        {product.discount > 0 && (
-          <span className="absolute top-3 right-3 bg-primary text-primary-foreground px-2 py-1 rounded-full text-xs font-bold font-mono">
-            -{product.discount}%
-          </span>
-        )}
+          {/* Right: wishlist */}
+          <button
+            onClick={(e) => { e.preventDefault(); toggleWishlist(product.id); }}
+            className={`pointer-events-auto w-8 h-8 rounded-full flex items-center justify-center transition-all shadow-sm ${
+              isWishlisted ? 'bg-destructive/10 text-destructive' : 'bg-card/80 backdrop-blur-sm text-muted-foreground hover:text-destructive'
+            }`}
+          >
+            <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-current' : ''}`} />
+          </button>
+        </div>
 
         {/* Quick actions */}
         <div className="absolute inset-x-3 bottom-3 flex gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
@@ -74,16 +87,6 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
           </Link>
         </div>
       </Link>
-
-      {/* Wishlist */}
-      <button
-        onClick={() => toggleWishlist(product.id)}
-        className={`absolute top-3 right-3 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-          product.discount > 0 ? 'top-12' : ''
-        } ${isWishlisted ? 'bg-destructive/10 text-destructive' : 'bg-card/80 backdrop-blur-sm text-muted-foreground hover:text-destructive'}`}
-      >
-        <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-current' : ''}`} />
-      </button>
 
       {/* Info */}
       <div className="p-4">
