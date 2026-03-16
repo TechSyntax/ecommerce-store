@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Truck, Shield, RotateCcw, Headphones, CheckCircle, Instagram, Twitter, Facebook, Youtube } from 'lucide-react';
+import { Truck, Shield, RotateCcw, Headphones, CheckCircle, Instagram, Twitter, Facebook, Youtube, ShoppingBag } from 'lucide-react';
 
 const trustFeatures = [
   { icon: Truck, label: 'Free Shipping', desc: 'On orders above ₹999' },
@@ -72,13 +72,16 @@ const Footer = () => {
             {/* Brand */}
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                  <span className="text-primary-foreground font-heading font-bold text-sm">LX</span>
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[hsl(24,100%,55%)] to-[hsl(24,100%,42%)] flex items-center justify-center">
+                  <ShoppingBag className="w-4 h-4 text-white" strokeWidth={2.2} />
                 </div>
-                <span className="font-heading font-bold text-lg text-secondary-foreground">LUXEMART</span>
+                <div className="flex items-baseline">
+                  <span className="font-heading font-extrabold text-lg text-primary">E</span>
+                  <span className="font-heading font-extrabold text-lg text-secondary-foreground">-Mart</span>
+                </div>
               </div>
               <p className="text-sm text-secondary-foreground/50 mb-4 leading-relaxed">
-                Premium commerce for the modern consumer. Discover, shop, and experience the best.
+                Your modern marketplace for premium products. Discover, shop, and experience the best.
               </p>
               <div className="flex gap-3">
                 {[Instagram, Twitter, Facebook, Youtube].map((Icon, i) => (
@@ -111,7 +114,7 @@ const Footer = () => {
         <div className="border-t border-secondary-foreground/10">
           <div className="container py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
             <p className="text-xs text-secondary-foreground/40">
-              © 2026 LuxeMart. All rights reserved.
+              © 2026 E-Mart. All rights reserved.
             </p>
             <div className="flex items-center gap-2">
               <span className="flex items-center gap-1.5 text-xs text-secondary-foreground/40">
