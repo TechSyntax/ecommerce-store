@@ -39,6 +39,7 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
           alt={product.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
+          onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.svg'; }}
         />
 
         {/* Top overlay row */}
