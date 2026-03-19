@@ -11,14 +11,14 @@ import { formatPrice } from '@/data/products';
 const steps = ['Address', 'Shipping', 'Payment', 'Review'];
 
 const CheckoutPage = () => {
-  const { cart, cartTotal, clearCart } = useStore();
+  const { cart, cartTotal, placeOrder } = useStore();
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [orderPlaced, setOrderPlaced] = useState(false);
-  const [orderId] = useState(() => 'LXM-' + Math.random().toString(36).slice(2, 8).toUpperCase());
 
   const handlePlaceOrder = () => {
-    setOrderPlaced(true);
-    clearCart();
+    placeOrder();
+    navigate('/view-order');
   };
 
   if (cart.length === 0 && !orderPlaced) {
