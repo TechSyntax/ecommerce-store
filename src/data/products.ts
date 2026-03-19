@@ -1210,7 +1210,7 @@ export const products: Product[] = [
     highlights: ['100% natural bamboo', 'Holds 15 pairs', 'Tool-free assembly', 'Ventilated design'],
     specs: { 'Material': '100% Bamboo', 'Tiers': '5', 'Dimensions': '70 x 25 x 88 cm', 'Capacity': '15 pairs' },
   },
-
+];
 
 export const formatPrice = (price: number): string => {
   return new Intl.NumberFormat('en-IN', {
