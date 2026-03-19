@@ -9,12 +9,28 @@ export interface CartItem {
   selectedSize?: string;
 }
 
+export interface OrderItem {
+  product: Product;
+  quantity: number;
+  subtotal: number;
+}
+
+export interface Order {
+  id: string;
+  items: OrderItem[];
+  total: number;
+  date: string;
+  paymentMethod: string;
+  deliveryAddress: string;
+}
+
 interface StoreState {
   cart: CartItem[];
   wishlist: string[];
   recentlyViewed: string[];
   searchHistory: string[];
   isCartOpen: boolean;
+  lastOrder: Order | null;
   addToCart: (product: Product, quantity?: number, color?: string, size?: string) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
@@ -25,6 +41,7 @@ interface StoreState {
   setCartOpen: (open: boolean) => void;
   cartTotal: () => number;
   cartCount: () => number;
+  placeOrder: (paymentMethod?: string, deliveryAddress?: string) => Order;
 }
 
 export const useStore = create<StoreState>()(
@@ -35,6 +52,7 @@ export const useStore = create<StoreState>()(
       recentlyViewed: [],
       searchHistory: [],
       isCartOpen: false,
+      lastOrder: null,
 
       addToCart: (product, quantity = 1, color, size) => {
         set((state) => {
@@ -94,6 +112,25 @@ export const useStore = create<StoreState>()(
 
       cartTotal: () => get().cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0),
       cartCount: () => get().cart.reduce((sum, item) => sum + item.quantity, 0),
+
+      placeOrder: (paymentMethod = 'Credit/Debit Card', deliveryAddress = '') => {
+        const { cart, cartTotal, clearCart } = get();
+        const order: Order = {
+          id: 'LXM-' + Math.random().toString(36).slice(2, 8).toUpperCase(),
+          items: cart.map((item) => ({
+            product: item.product,
+            quantity: item.quantity,
+            subtotal: item.product.price * item.quantity,
+          })),
+          total: cartTotal(),
+          date: new Date().toISOString(),
+          paymentMethod,
+          deliveryAddress,
+        };
+        set({ lastOrder: order });
+        clearCart();
+        return order;
+      },
     }),
     { name: 'luxe-store' }
   )
