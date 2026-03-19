@@ -9,6 +9,7 @@ import ProductDetailPage from "./pages/ProductDetailPage";
 import CartPage from "./pages/CartPage";
 import WishlistPage from "./pages/WishlistPage";
 import CheckoutPage from "./pages/CheckoutPage";
+import ViewOrderPage from "./pages/ViewOrderPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
