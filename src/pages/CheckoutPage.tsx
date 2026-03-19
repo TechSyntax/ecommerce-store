@@ -14,7 +14,7 @@ const CheckoutPage = () => {
   const { cart, cartTotal, placeOrder } = useStore();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
-  const [orderPlaced, setOrderPlaced] = useState(false);
+  
 
   const handlePlaceOrder = () => {
     placeOrder();
