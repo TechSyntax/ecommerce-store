@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Check, CreditCard, Truck, MapPin, ShieldCheck } from 'lucide-react';
-import { motion } from 'framer-motion';
+
 import Navbar from '@/components/Navbar';
 import CartDrawer from '@/components/CartDrawer';
 import Footer from '@/components/Footer';
