@@ -33,10 +33,6 @@ interface StoreState {
   isCartOpen: boolean;
   lastOrder: Order | null;
   orders: Order[];
-  recentlyViewed: string[];
-  searchHistory: string[];
-  isCartOpen: boolean;
-  lastOrder: Order | null;
   addToCart: (product: Product, quantity?: number, color?: string, size?: string) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
@@ -59,6 +55,7 @@ export const useStore = create<StoreState>()(
       searchHistory: [],
       isCartOpen: false,
       lastOrder: null,
+      orders: [],
 
       addToCart: (product, quantity = 1, color, size) => {
         set((state) => {
