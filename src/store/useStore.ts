@@ -22,6 +22,7 @@ export interface Order {
   date: string;
   paymentMethod: string;
   deliveryAddress: string;
+  status: 'Processing' | 'Shipped' | 'Delivered';
 }
 
 interface StoreState {
