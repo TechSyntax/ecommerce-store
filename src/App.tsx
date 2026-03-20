@@ -29,6 +29,8 @@ const App = () => (
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/view-order" element={<ViewOrderPage />} />
+          <Route path="/account" element={<AccountPage />} />
+          <Route path="/account/orders" element={<AccountPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
