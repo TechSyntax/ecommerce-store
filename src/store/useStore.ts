@@ -129,8 +129,9 @@ export const useStore = create<StoreState>()(
           date: new Date().toISOString(),
           paymentMethod,
           deliveryAddress,
+          status: 'Processing',
         };
-        set({ lastOrder: order });
+        set((state) => ({ lastOrder: order, orders: [order, ...state.orders] }));
         clearCart();
         return order;
       },
