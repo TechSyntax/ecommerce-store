@@ -32,6 +32,11 @@ interface StoreState {
   searchHistory: string[];
   isCartOpen: boolean;
   lastOrder: Order | null;
+  orders: Order[];
+  recentlyViewed: string[];
+  searchHistory: string[];
+  isCartOpen: boolean;
+  lastOrder: Order | null;
   addToCart: (product: Product, quantity?: number, color?: string, size?: string) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
