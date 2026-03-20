@@ -10,6 +10,7 @@ import CartPage from "./pages/CartPage";
 import WishlistPage from "./pages/WishlistPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import ViewOrderPage from "./pages/ViewOrderPage";
+import AccountPage from "./pages/AccountPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,8 @@ const App = () => (
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/view-order" element={<ViewOrderPage />} />
+          <Route path="/account" element={<AccountPage />} />
+          <Route path="/account/orders" element={<AccountPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

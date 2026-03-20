@@ -22,6 +22,7 @@ export interface Order {
   date: string;
   paymentMethod: string;
   deliveryAddress: string;
+  status: 'Processing' | 'Shipped' | 'Delivered';
 }
 
 interface StoreState {
@@ -31,6 +32,7 @@ interface StoreState {
   searchHistory: string[];
   isCartOpen: boolean;
   lastOrder: Order | null;
+  orders: Order[];
   addToCart: (product: Product, quantity?: number, color?: string, size?: string) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
@@ -53,6 +55,7 @@ export const useStore = create<StoreState>()(
       searchHistory: [],
       isCartOpen: false,
       lastOrder: null,
+      orders: [],
 
       addToCart: (product, quantity = 1, color, size) => {
         set((state) => {
@@ -126,8 +129,9 @@ export const useStore = create<StoreState>()(
           date: new Date().toISOString(),
           paymentMethod,
           deliveryAddress,
+          status: 'Processing',
         };
-        set({ lastOrder: order });
+        set((state) => ({ lastOrder: order, orders: [order, ...state.orders] }));
         clearCart();
         return order;
       },
