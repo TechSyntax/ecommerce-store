@@ -9,17 +9,41 @@ import { useStore } from '@/store/useStore';
 import { formatPrice } from '@/data/products';
 
 const steps = ['Address', 'Shipping', 'Payment', 'Review'];
+const orderData = JSON.parse(localStorage.getItem("orderData") || "{}");
+
 
 const CheckoutPage = () => {
   const { cart, cartTotal, placeOrder } = useStore();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
-  
+  const [selectedShipping, setSelectedShipping] = useState(0);
+  const [selectedPayment, setSelectedPayment] = useState(0);
 
-  const handlePlaceOrder = () => {
-    placeOrder();
-    navigate('/view-order');
+const shippingOptions = [
+  { label: 'Express Delivery', price: 0 },
+  { label: 'Standard Delivery', price: 0 },
+  { label: 'Same Day Delivery', price: 149 }
+];
+
+const paymentMethods = [
+  'Credit/Debit Card',
+  'UPI',
+  'Net Banking',
+  'Cash on Delivery'
+];
+
+const handlePlaceOrder = () => {
+  const orderData = {
+    paymentMethod: paymentMethods[selectedPayment],
+    deliveryPrice: shippingOptions[selectedShipping].price,
+    deliveryType: shippingOptions[selectedShipping].label
   };
+
+  localStorage.setItem("orderData", JSON.stringify(orderData));
+
+  placeOrder();
+  navigate('/view-order');
+};
 
   if (cart.length === 0) {
     return (
@@ -71,7 +95,7 @@ const CheckoutPage = () => {
                     <MapPin className="w-5 h-5 text-primary" /> Delivery Address
                   </h2>
                   <div className="grid sm:grid-cols-2 gap-4">
-                    <input placeholder="First Name" className="px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30 transition-colors" />
+                    <input placeholder="First Name"  className="px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30 transition-colors" />
                     <input placeholder="Last Name" className="px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30 transition-colors" />
                   </div>
                   <input placeholder="Address Line 1" className="w-full px-4 py-3 bg-card border border-border rounded-xl text-sm outline-none focus:border-primary/30 transition-colors" />
@@ -92,21 +116,31 @@ const CheckoutPage = () => {
                     <Truck className="w-5 h-5 text-primary" /> Shipping Method
                   </h2>
                   {[
-                    { label: 'Express Delivery', desc: 'Get it by tomorrow', price: 'Free', selected: true },
-                    { label: 'Standard Delivery', desc: '3-5 business days', price: 'Free', selected: false },
-                    { label: 'Same Day Delivery', desc: 'Order before 2 PM', price: '₹149', selected: false },
-                  ].map((opt, i) => (
-                    <label key={i} className={`flex items-center gap-4 p-4 rounded-2xl border cursor-pointer transition-all ${opt.selected ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/30'}`}>
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${opt.selected ? 'border-primary' : 'border-muted-foreground/30'}`}>
-                        {opt.selected && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">{opt.label}</p>
-                        <p className="text-xs text-muted-foreground">{opt.desc}</p>
-                      </div>
-                      <span className="text-sm font-medium">{opt.price}</span>
-                    </label>
-                  ))}
+                   { label: 'Express Delivery', desc: 'Get it by tomorrow', price: 'Free' },
+                  { label: 'Standard Delivery', desc: '3-5 business days', price: 'Free' },
+                  //  { label: 'Same Day Delivery', desc: 'Order before 2 PM', price: '₹149' },
+          ].map((opt, i) => (
+                     <label
+              key={i}
+    onClick={() => setSelectedShipping(i)}
+    className={`flex items-center gap-4 p-4 rounded-2xl border cursor-pointer transition-all ${
+      selectedShipping === i
+        ? 'border-primary bg-primary/5'
+        : 'border-border hover:border-primary/30'
+    }`}
+  >
+    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+      selectedShipping === i ? 'border-primary' : 'border-muted-foreground/30'
+    }`}>
+       {selectedShipping === i && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
+    </div>
+    <div className="flex-1">
+      <p className="text-sm font-medium">{opt.label}</p>
+      <p className="text-xs text-muted-foreground">{opt.desc}</p>
+    </div>
+    <span className="text-sm font-medium">{opt.price}</span>
+  </label>
+))}
                 </div>
               )}
 
@@ -116,14 +150,24 @@ const CheckoutPage = () => {
                   <h2 className="font-heading font-semibold text-lg flex items-center gap-2">
                     <CreditCard className="w-5 h-5 text-primary" /> Payment Method
                   </h2>
-                  {['Credit/Debit Card', 'UPI', 'Net Banking', 'Cash on Delivery'].map((method, i) => (
-                    <label key={i} className={`flex items-center gap-4 p-4 rounded-2xl border cursor-pointer transition-all ${i === 0 ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/30'}`}>
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${i === 0 ? 'border-primary' : 'border-muted-foreground/30'}`}>
-                        {i === 0 && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
-                      </div>
-                      <span className="text-sm font-medium">{method}</span>
-                    </label>
-                  ))}
+                {['Credit/Debit Card', 'UPI', 'Net Banking', 'Cash on Delivery'].map((method, i) => (
+          <label
+     key={i}
+           onClick={() => setSelectedPayment(i)}
+         className={`flex items-center gap-4 p-4 rounded-2xl border cursor-pointer transition-all ${
+         selectedPayment === i
+               ? 'border-primary bg-primary/5'
+        : 'border-border hover:border-primary/30'
+    }`}
+  >
+         <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${  
+       selectedPayment === i ? 'border-primary' : 'border-muted-foreground/30'
+    }`}>
+      {selectedPayment === i && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
+     </div>
+           <span className="text-sm font-medium">{method}</span>
+  </label>
+))}
                 </div>
               )}
 
@@ -181,12 +225,16 @@ const CheckoutPage = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Delivery</span>
-                    <span className="text-success font-medium">Free</span>
+                    <span className="font-medium">
+                        {shippingOptions[selectedShipping].price === 0
+                           ? 'Free'
+                                     : `₹${shippingOptions[selectedShipping].price}`}
+                                   </span>
                   </div>
                 </div>
                 <div className="flex justify-between font-heading font-bold text-lg pt-3 border-t border-border">
                   <span>Total</span>
-                  <span className="font-mono">{formatPrice(cartTotal())}</span>
+                  <span className="font-mono">{formatPrice(cartTotal() + shippingOptions[selectedShipping].price)}</span>
                 </div>
                 <div className="flex items-center gap-2 mt-4 text-xs text-muted-foreground">
                   <ShieldCheck className="w-4 h-4 text-success" />

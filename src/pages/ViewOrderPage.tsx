@@ -12,6 +12,8 @@ const fadeUp = {
   animate: { opacity: 1, y: 0 },
 };
 
+const orderData = JSON.parse(localStorage.getItem("orderData") || "{}");
+
 const OrderProductCard = ({ item }: { item: Order['items'][number] }) => (
   <div className="flex items-center gap-4 p-4 bg-card rounded-2xl border border-border">
     <img
@@ -157,7 +159,11 @@ const ViewOrderPage = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Delivery</span>
-                    <span className="text-success font-medium">Free</span>
+                  <span className="font-medium">
+                     {orderData.deliveryPrice === 0
+                      ? 'Free'
+                        : `₹${orderData.deliveryPrice}`}
+                               </span>
                   </div>
                 </div>
                 <div className="flex justify-between font-heading font-bold text-lg pt-3 mt-3 border-t border-border">
