@@ -1,73 +1,116 @@
-# Welcome to your Lovable project
+# 🛍️ Lumina Commerce — Modern E-commerce Web App
 
-## Project info
+A modern, responsive e-commerce web application focused on clean UI, smooth user experience, and real-world shopping flow. This project demonstrates product browsing, cart management, checkout, and order confirmation using a frontend-driven architecture.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+---
 
-## How can I edit this code?
+## 🚀 Live Demo
 
-There are several ways of editing your application.
+👉 *(Add your Vercel link here)*
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## 📌 Features
 
-Changes made via Lovable will be committed automatically to this repo.
+### 🛒 Shopping Experience
 
-**Use your preferred IDE**
+* Browse products by category
+* Dynamic product cards with hover effects
+* Add to cart with real-time UI feedback
+* Cart drawer with live updates
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 💳 Checkout System
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+* Multi-step checkout (Address → Shipping → Payment → Review)
+* Dynamic delivery selection (updates total in real-time)
+* Payment method selection (UPI, Card, COD, etc.)
+* Form validation for required fields
 
-Follow these steps:
+### 📦 Order Management
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+* Order confirmation page with animation
+* Dynamic price summary (subtotal + delivery)
+* Selected payment & delivery method displayed
+* Estimated delivery tracking UI
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+---
 
-# Step 3: Install the necessary dependencies.
-npm i
+## 🧠 Data Handling
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+* Product data is currently **stored locally in a static data file**
+* State management is handled using **Zustand**
+* No backend or database is integrated yet
+
+---
+
+## 🛠️ Tech Stack
+
+* **Frontend:** React.js
+* **Styling:** Tailwind CSS
+* **State Management:** Zustand
+* **Routing:** React Router
+* **Icons:** Lucide React
+* **Animations:** Framer Motion
+
+---
+
+## 📂 Project Structure
+
+```id="f6p3r2"
+src/
+ ├── components/
+ ├── pages/
+ ├── store/
+ ├── data/        # Static product data
+ ├── assets/
+ └── App.jsx
+```
+
+---
+
+## ⚙️ Installation & Setup
+
+```bash id="0vnbti"
+# Clone the repository
+git clone https://github.com/TechSyntax/ecommerce-store.git
+
+# Navigate to project
+cd ecommerce-store
+
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📈 Key Highlights
 
-**Use GitHub Codespaces**
+* Fully dynamic frontend checkout system
+* State-driven UI (no hardcoded interactions)
+* Clean and scalable component structure
+* Real-world e-commerce flow simulation
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## 🔮 Future Improvements
 
-This project is built with:
+* Backend integration (Node.js + Database)
+* User authentication system
+* Admin dashboard for product management
+* Payment gateway integration
+* Order history & tracking system
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+## 📧 Contact
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+* GitHub: https://github.com/TechSyntax
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+## ⭐ If you like this project
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Give it a ⭐ on GitHub — it helps!
